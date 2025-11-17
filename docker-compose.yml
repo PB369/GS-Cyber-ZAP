@@ -1,0 +1,27 @@
+version: "3.9"
+services:
+  app:
+    build: ./app   # ou "image: minha-app:latest"
+    container_name: app
+    ports:
+      - "3000:3000"
+    networks:
+      - zapnet
+
+  zap:
+    image: zaproxy/zap-stable
+    container_name: zap
+    depends_on:
+      - app
+    networks:
+      - zapnet
+    volumes:
+      - ./reports:/zap/wrk
+    entrypoint: >
+      zap-full-scan.py
+      -t http://app:3000
+      -r zap-report.html
+
+networks:
+  zapnet:
+    driver: bridge

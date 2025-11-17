@@ -16,6 +16,7 @@ jobs:
       - name: Run OWASP ZAP Baseline Scan
         run: |
           docker run --rm \
+          -v $(pwd)/zap-report:/zap/wrk \
           zaproxy/zap-stable \
           zap-baseline.py \
           -t ${{ secrets.EXPO_WEB_URL }} \

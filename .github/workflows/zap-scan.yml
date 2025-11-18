@@ -13,22 +13,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Create report directory with correct permissions
-        run: |
-          mkdir -p zap-report
-          sudo chmod 777 zap-report
-
-      - name: Run OWASP ZAP Baseline Scan
-        run: |
-          docker run --rm \
-            -v $(pwd)/zap-report:/zap/wrk \
-            zaproxy/zap-stable \
-            zap-baseline.py \
-            -t ${{ secrets.EXPO_WEB_URL }} \
-            -r report.html
+      - name: Run OWASP ZAP Scan
+        uses: zaproxy/action-baseline@v0.14.0
+        with:
+          target: ${{ secrets.EXPO_WEB_URL }}
 
       - name: Upload ZAP Report
         uses: actions/upload-artifact@v4
         with:
           name: zap-report
-          path: zap-report/report.html
+          path: report.html
